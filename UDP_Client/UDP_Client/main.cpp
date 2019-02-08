@@ -1,12 +1,6 @@
-#include <iostream>
-#include <WS2tcpip.h>
-#include <string>
-#include <chrono>
-// use std chrono for timing if needed
-
-#pragma comment (lib, "ws2_32.lib")
-
-using namespace std;
+#pragma once
+#include "stdafx.h"
+#include "Commands.h"
 
 /*
 	Coehl Gleckner
@@ -19,20 +13,11 @@ using namespace std;
 	And then expanded on it to create the rest of the application
 */
 
-struct command
-{
-	unsigned char cmd; // 256 commands for now
-	char payload[127]; // Some payload based on the command
-};
-
-struct status
-{
-	unsigned char status; // 256 status tpyes for now
-	char payload[127]; // Some payload based
-};
-
 void main(int argc, char* argv[]) // We can pass in a command line option!!
 {
+	// Initialize the commands
+	Commands commandList;
+
 	// Startup Winsock
 	WSADATA data;
 	WORD version = MAKEWORD(2, 2);
@@ -48,24 +33,14 @@ void main(int argc, char* argv[]) // We can pass in a command line option!!
 	serverHint.sin_port = htons(32954);
 
 	// converts from string to binary for address
-	inet_pton(AF_INET, "129.21.28.31", &serverHint.sin_addr);
+	inet_pton(AF_INET, "129.21.28.31", &serverHint.sin_addr); // address is of the server
 	int serverLength = sizeof(serverHint);
 
 	// Socket creation
-	//char buf[1024];
-	//ZeroMemory(buf, 1024);
-	//strcpy_s(buf, argv[1]);
-
-	// Creating the connect command
-	command connect;
-	connect.cmd = 'c';
-	ZeroMemory(connect.payload, 127);
-	strcpy_s(connect.payload, "Coehl");
-
 	SOCKET serverSocket = socket(AF_INET, SOCK_DGRAM, 0);
 
 	// Write out to that socket
-	int sendOk = sendto(serverSocket, (char*)&connect, 128, 0, (sockaddr*)&serverHint, serverLength);
+	int sendOk = sendto(serverSocket, (char*)&commandList.connect, 128, 0, (sockaddr*)&serverHint, serverLength);
 
 	if (sendOk == SOCKET_ERROR)
 	{
@@ -74,9 +49,9 @@ void main(int argc, char* argv[]) // We can pass in a command line option!!
 
 	// Check to see if connection was established
 	status serverStatus;
-	ZeroMemory(serverStatus.payload, 127);
+	ZeroMemory((char*)&serverStatus, 128);
 
-	int bytesIn = recvfrom(serverSocket, (char*)&serverStatus, 1024, 0, (sockaddr*)&serverHint, &serverLength);
+	int bytesIn = recvfrom(serverSocket, (char*)&serverStatus, 128, 0, (sockaddr*)&serverHint, &serverLength);
 	if (bytesIn == SOCKET_ERROR)
 	{
 		cout << "Error receiving from client " << WSAGetLastError() << endl;
@@ -88,18 +63,23 @@ void main(int argc, char* argv[]) // We can pass in a command line option!!
 		cout << serverStatus.payload << endl;
 	}
 
-	/*
 	while (true)
 	{
+		ZeroMemory((char*)&serverStatus, 128);
+
 		// Sending a message
-		cout << "Type a message to send to the server" << endl;
+		cout << "Insert a command" << endl;
 		string msg;
 		getline(cin, msg);
-		ZeroMemory(buf, 1024);
+		
+		// Check to see if msg is a valid command
 
-		strcpy_s(buf, msg.c_str());
-		//cout << msg.c_str() << endl;
+		if (msg == "Display")
+		{
 
+		}
+
+		// send the command to the server
 		sendOk = sendto(serverSocket, buf, 1024, 0, (sockaddr*)&serverHint, serverLength);
 
 		if (sendOk == SOCKET_ERROR)
@@ -120,7 +100,7 @@ void main(int argc, char* argv[]) // We can pass in a command line option!!
 			continue;
 		}
 
-		// display message and client info
+		// Display the server IP
 		char serverIp[256];
 		ZeroMemory(serverIp, 256);
 
@@ -136,7 +116,7 @@ void main(int argc, char* argv[]) // We can pass in a command line option!!
 			//break;
 		}
 	}
-	*/
+	
 
 	// close the socket
 	closesocket(serverSocket);

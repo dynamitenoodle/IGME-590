@@ -115,7 +115,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Dungeon.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Status.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Dungeon.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Status.h" />
+    <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
