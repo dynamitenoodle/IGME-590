@@ -1,0 +1,3 @@
+﻿  main.cpp
+z:\igmprofile\networking\udp_client\udp_client\main.cpp(35): warning C4326: return type of 'main' should be 'int' instead of 'void'
+  UDP_Client.vcxproj -> Z:\IGMProfile\Networking\UDP_Client\Debug\UDP_Client.exe
