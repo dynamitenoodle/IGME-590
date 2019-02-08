@@ -1,4 +1,0 @@
-﻿  TestCPPLibrary.cpp
-z:\igmprofile\networking\testcpplibrary\testcpplibrary\testcpplibrary.cpp(25): error C2059: syntax error: '__declspec(dllexport)'
-z:\igmprofile\networking\testcpplibrary\testcpplibrary\testcpplibrary.cpp(26): error C2143: syntax error: missing ';' before '{'
-z:\igmprofile\networking\testcpplibrary\testcpplibrary\testcpplibrary.cpp(26): error C2447: '{': missing function header (old-style formal list?)
