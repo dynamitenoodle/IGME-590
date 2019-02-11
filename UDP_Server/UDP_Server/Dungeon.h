@@ -37,6 +37,9 @@ public:
 	// Move a player
 	void MovePlayer(string name, int x, int y);
 
+	// Move a player
+	void AddTreasure(string name);
+
 private:
 	int playerCount;
 	Player* playerArray;

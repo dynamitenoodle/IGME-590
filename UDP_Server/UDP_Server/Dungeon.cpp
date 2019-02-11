@@ -137,7 +137,7 @@ bool Dungeon::GetTreasure(string name, bool take)
 			if (take)
 			{
 				RemoveTreasure(GetPlayer(name).positionX, GetPlayer(name).positionY);
-				GetPlayer(name).AddTreasure();
+				AddTreasure(name);
 			}
 			return true;
 		}
@@ -166,6 +166,17 @@ void Dungeon::MovePlayer(string name, int x, int y)
 		{
 			playerArray[i].positionX += x;
 			playerArray[i].positionY += y;
+		}
+	}
+}
+
+void Dungeon::AddTreasure(string name)
+{
+	for (int i = 0; i < playerCount; i++)
+	{
+		if (playerArray[i].GetName() == name)
+		{
+			playerArray[i].AddTreasure();
 		}
 	}
 }

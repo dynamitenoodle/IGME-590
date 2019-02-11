@@ -203,6 +203,8 @@ void main()
 				cout << "that didn't work! " << WSAGetLastError() << endl;
 			}
 
+			// Making the layout to send to the client, not quite working yet
+			/* 
 			// creating the dungeon layout
 			string dungeonLayout;
 			for (int x = 0; x < sizeX; x++)
@@ -232,18 +234,20 @@ void main()
 			}
 			
 			// Send the size of the buffer
+			size_t size = (dungeonLayout.size() * 8) + 1;
 			ZeroMemory((char*)&statusList.display.payload, 127);
-			strcpy_s(statusList.display.payload, to_string(sizeof(dungeonLayout)).c_str());
-			sendOk = sendto(clientSocket, (char*)&statusList.display, sizeof(dungeonLayout), 0, (sockaddr*)&client, clientLength);
+			strcpy_s(statusList.display.payload, to_string(size).c_str());
+			sendOk = sendto(clientSocket, (char*)&statusList.display, 128, 0, (sockaddr*)&client, clientLength);
 			if (sendOk == SOCKET_ERROR)
 			{
 				cout << "that didn't work! " << WSAGetLastError() << endl;
 			}
 
 			// send the information to the client
-			ZeroMemory((char*)&statusList.display.payload, sizeof(dungeonLayout));
+			ZeroMemory((char*)&statusList.display.payload, size);
 			strcpy_s(statusList.display.payload, dungeonLayout.c_str());
-			sendOk = sendto(clientSocket, (char*)&statusList.display, sizeof(dungeonLayout), 0, (sockaddr*)&client, clientLength);
+			sendOk = sendto(clientSocket, (char*)&statusList.display, size, 0, (sockaddr*)&client, clientLength);
+			*/
 		}
 
 		// Leave Command
