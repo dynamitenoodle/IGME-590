@@ -31,6 +31,9 @@ public:
 	// Checks to see if there is treasure in the player's room, and adds it to their total and removes it if there is
 	bool GetTreasure(string name, bool take);
 
+	// Checks to see if there is treasure in a room
+	bool GetTreasure(int x, int y, bool take);
+
 	// Move a player
 	void MovePlayer(string name, int x, int y);
 

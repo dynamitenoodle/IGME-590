@@ -246,6 +246,25 @@ void main(int argc, char* argv[]) // We can pass in a command line option!!
 
 				cout << serverStatus.payload << endl;
 
+				ZeroMemory((char*)&serverStatus, 128);
+				// receive the dungeon size for the buffer
+				bytesIn = recvfrom(serverSocket, (char*)&serverStatus, 128, 0, (sockaddr*)&serverHint, &serverLength);
+				if (bytesIn == SOCKET_ERROR)
+				{
+					cout << "Error receiving from client " << WSAGetLastError() << endl;
+				}
+
+				// Receive the dungeon layout
+				string bufferSize(serverStatus.payload);
+				unsigned long long bufferSize = strtoull(serverStatus.payload, nullptr,);
+				ZeroMemory((char*)&serverStatus, );
+				bytesIn = recvfrom(serverSocket, (char*)&serverStatus, 128, 0, (sockaddr*)&serverHint, &serverLength);
+				if (bytesIn == SOCKET_ERROR)
+				{
+					cout << "Error receiving from client " << WSAGetLastError() << endl;
+				}
+
+				cout << serverStatus.payload << endl;
 				break;
 			}
 

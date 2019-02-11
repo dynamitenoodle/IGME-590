@@ -186,8 +186,8 @@ void main()
 				playerNames += playerArray[i].GetName() + "  ";
 			}
 
+			ZeroMemory((char*)&statusList.display.payload, 127);
 			strcpy_s(statusList.display.payload, playerNames.c_str());
-
 			sendOk = sendto(clientSocket, (char*)&statusList.display, 128, 0, (sockaddr*)&client, clientLength);
 			if (sendOk == SOCKET_ERROR)
 			{
@@ -195,9 +195,55 @@ void main()
 			}
 
 			// Sends a string with the important dungeon information
+			ZeroMemory((char*)&statusList.display.payload, 127);
 			strcpy_s(statusList.display.payload, dungeon.DisplayValues(clientCommand.payload).c_str());
 			sendOk = sendto(clientSocket, (char*)&statusList.display, 128, 0, (sockaddr*)&client, clientLength);
+			if (sendOk == SOCKET_ERROR)
+			{
+				cout << "that didn't work! " << WSAGetLastError() << endl;
+			}
 
+			// creating the dungeon layout
+			string dungeonLayout;
+			for (int x = 0; x < sizeX; x++)
+			{
+				for (int y = 0; y < sizeY; y++)
+				{
+					bool playerCheck = false;
+					bool treasureCheck = dungeon.GetTreasure(x, y, false);
+					for (int i = 0; i < dungeon.GetPlayerCount(); i++)
+					{
+						if (dungeon.GetPlayerArray()[i].ColCheck(x, y))
+						{
+							playerCheck = true;
+						}
+					}
+
+					if (playerCheck)
+						dungeonLayout += " [P] ";
+					
+					else if (treasureCheck)
+						dungeonLayout += " [T] ";
+
+					else
+						dungeonLayout += " [-] ";
+				}
+				dungeonLayout += "\n";
+			}
+			
+			// Send the size of the buffer
+			ZeroMemory((char*)&statusList.display.payload, 127);
+			strcpy_s(statusList.display.payload, to_string(sizeof(dungeonLayout)).c_str());
+			sendOk = sendto(clientSocket, (char*)&statusList.display, sizeof(dungeonLayout), 0, (sockaddr*)&client, clientLength);
+			if (sendOk == SOCKET_ERROR)
+			{
+				cout << "that didn't work! " << WSAGetLastError() << endl;
+			}
+
+			// send the information to the client
+			ZeroMemory((char*)&statusList.display.payload, sizeof(dungeonLayout));
+			strcpy_s(statusList.display.payload, dungeonLayout.c_str());
+			sendOk = sendto(clientSocket, (char*)&statusList.display, sizeof(dungeonLayout), 0, (sockaddr*)&client, clientLength);
 		}
 
 		// Leave Command

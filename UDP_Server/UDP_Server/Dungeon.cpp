@@ -5,7 +5,7 @@ Dungeon::Dungeon(int sizeX, int sizeY, int maxTreasure)
 	this->playerArray = new Player[10]();
 	this->sizeX = sizeX;
 	this->sizeY = sizeY;
-	int minimum = floor((sizeX * sizeY) / 10);
+	int minimum = (int)floor((sizeX * sizeY) / 10);
 	if (maxTreasure - minimum <= 0)
 		this->treasureAmt = minimum;
 	else
@@ -145,6 +145,19 @@ bool Dungeon::GetTreasure(string name, bool take)
 	return false;
 }
 
+bool Dungeon::GetTreasure(int x, int y, bool take)
+{
+	for (int i = 0; i < treasureAmt; i++)
+	{
+		// if we find the treasure
+		if (treasures[i].ColCheck(x, y))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 void Dungeon::MovePlayer(string name, int x, int y)
 {
 	for (int i = 0; i < playerCount; i++)
@@ -178,8 +191,6 @@ void Dungeon::GenerateTreasure()
 		if (newTreasureCheck)
 			i++;
 	}
-
-	int y;
 }
 
 void Dungeon::RemoveTreasure(int x, int y)
