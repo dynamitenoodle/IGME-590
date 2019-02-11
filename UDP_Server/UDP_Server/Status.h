@@ -7,7 +7,13 @@ public:
 	Status();
 	~Status();
 
-	status welcome;
-	status displayDungeon;
+	status connect;
+	status display;
+	status leave;
+	status move;
+	status inspect;
+	status getTreasure;
+	status treasureAmnt;
+	status testConnect;
 };
 

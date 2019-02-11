@@ -4,18 +4,33 @@
 class Player
 {
 public:
-	Player(char clientIp[256], int playerNum, char* name, int x, int y);
+	Player();
+	Player(char clientIp[256], int playerNum, string name, int x, int y);
 	~Player();
 
+	// Gets the player's name
 	string GetName();
+
+	// Gets the player's IP Address
 	string GetIp();
-private:
-	char clientIp[256];
-	int playerNum;
-	char* name;
+
+	// Gets the player's current TreasureAmt
+	int GetTreasureAmt();
 
 	// Position Coords
 	int positionX;
 	int positionY;
+
+	bool ColCheck(int x, int y);
+
+	// Adds treasure to the player's total
+	void AddTreasure();
+
+private:
+	char clientIp[256];
+	int playerNum;
+	string name;
+
+	int treasureAmt;
 };
 

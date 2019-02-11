@@ -16,6 +16,6 @@ struct command
 
 struct status
 {
-	unsigned char status; // 256 status tpyes for now
+	unsigned char sts; // 256 status tpyes for now
 	char payload[127]; // Some payload based
 };
