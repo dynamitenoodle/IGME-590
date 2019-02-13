@@ -204,18 +204,28 @@ void main()
 			}
 
 			// Making the layout to send to the client, not quite working yet
-			/* 
+			// Send how many times to repeat
+			int size = sizeX;
+			ZeroMemory((char*)&statusList.display.payload, 127);
+			strcpy_s(statusList.display.payload, to_string(size).c_str());
+			sendOk = sendto(clientSocket, (char*)&statusList.display, 128, 0, (sockaddr*)&client, clientLength);
+			if (sendOk == SOCKET_ERROR)
+			{
+				cout << "that didn't work! " << WSAGetLastError() << endl;
+			}
+
 			// creating the dungeon layout
 			string dungeonLayout;
-			for (int x = 0; x < sizeX; x++)
+			for (int x = sizeX; x > 0; x--)
 			{
+				dungeonLayout = "";
 				for (int y = 0; y < sizeY; y++)
 				{
 					bool playerCheck = false;
-					bool treasureCheck = dungeon.GetTreasure(x, y, false);
+					bool treasureCheck = dungeon.GetTreasure(y, x, false);
 					for (int i = 0; i < dungeon.GetPlayerCount(); i++)
 					{
-						if (dungeon.GetPlayerArray()[i].ColCheck(x, y))
+						if (dungeon.GetPlayerArray()[i].ColCheck(y, x))
 						{
 							playerCheck = true;
 						}
@@ -230,24 +240,15 @@ void main()
 					else
 						dungeonLayout += " [-] ";
 				}
-				dungeonLayout += "\n";
+				// Send the current Layout Line to the client
+				ZeroMemory((char*)&statusList.display.payload, 127);
+				strcpy_s(statusList.display.payload, dungeonLayout.c_str());
+				sendOk = sendto(clientSocket, (char*)&statusList.display, 128, 0, (sockaddr*)&client, clientLength);
+				if (sendOk == SOCKET_ERROR)
+				{
+					cout << "that didn't work! " << WSAGetLastError() << endl;
+				}
 			}
-			
-			// Send the size of the buffer
-			size_t size = (dungeonLayout.size() * 8) + 1;
-			ZeroMemory((char*)&statusList.display.payload, 127);
-			strcpy_s(statusList.display.payload, to_string(size).c_str());
-			sendOk = sendto(clientSocket, (char*)&statusList.display, 128, 0, (sockaddr*)&client, clientLength);
-			if (sendOk == SOCKET_ERROR)
-			{
-				cout << "that didn't work! " << WSAGetLastError() << endl;
-			}
-
-			// send the information to the client
-			ZeroMemory((char*)&statusList.display.payload, size);
-			strcpy_s(statusList.display.payload, dungeonLayout.c_str());
-			sendOk = sendto(clientSocket, (char*)&statusList.display, size, 0, (sockaddr*)&client, clientLength);
-			*/
 		}
 
 		// Leave Command
@@ -296,7 +297,7 @@ void main()
 					cout << name << " moved North." << endl;
 				}
 
-				else if (clientCommand.cmd == 's' && (dungeon.GetPlayer(name).positionY < sizeY))
+				else if (clientCommand.cmd == 's' && (dungeon.GetPlayer(name).positionY > 1))
 				{
 					strcpy_s(statusList.move.payload, "Moved to the South.");
 					sendOk = sendto(clientSocket, (char*)&statusList.move, 128, 0, (sockaddr*)&client, clientLength);
@@ -305,7 +306,7 @@ void main()
 					cout << name << " moved South." << endl;
 				}
 
-				else if (clientCommand.cmd == 'e' && (dungeon.GetPlayer(name).positionY < sizeY))
+				else if (clientCommand.cmd == 'e' && (dungeon.GetPlayer(name).positionX < sizeX))
 				{
 					strcpy_s(statusList.move.payload, "Moved to the East.");
 					sendOk = sendto(clientSocket, (char*)&statusList.move, 128, 0, (sockaddr*)&client, clientLength);
@@ -314,7 +315,7 @@ void main()
 					cout << name << " moved East." << endl;
 				}
 
-				else if (clientCommand.cmd == 'w' && (dungeon.GetPlayer(name).positionY < sizeY))
+				else if (clientCommand.cmd == 'w' && (dungeon.GetPlayer(name).positionX > 0))
 				{
 					strcpy_s(statusList.move.payload, "Moved to the West.");
 					sendOk = sendto(clientSocket, (char*)&statusList.move, 128, 0, (sockaddr*)&client, clientLength);

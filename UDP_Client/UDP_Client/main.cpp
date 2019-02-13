@@ -136,7 +136,7 @@ void main(int argc, char* argv[]) // We can pass in a command line option!!
 			cout << "enter - Adds the player to dungeon, must be called first to be in the dungeon." << endl;
 			cout << "display - Shows the players names and the current dungeon layout." << endl;
 			cout << "leave - Allows the player to escape the dungeon with what treasure they have collected." << endl;
-			cout << "move - ." << endl;
+			cout << "move - Takes in an additional command (north south east or west) to move the player in that direction." << endl;
 			cout << "inspect - Lets the player look around the room for treasure, other players, and which directions they can go." << endl;
 			cout << "gettreasure - Allows the player to take the treasure if there is any in the room." << endl;
 			cout << "treasureamnt - Allows the player to see how much treasure they have, and how much is left in the dungeon." << endl;
@@ -191,6 +191,11 @@ void main(int argc, char* argv[]) // We can pass in a command line option!!
 
 			else if (msg == "treasureamnt")
 				sendOk = sendto(serverSocket, (char*)&commandList.treasureAmnt, 128, 0, (sockaddr*)&serverHint, serverLength);
+			else
+			{
+				cout << "Failure to recognize input, please try again" << endl;
+				continue;
+			}
 		}
 
 		// Failure to recognize the message
@@ -246,9 +251,9 @@ void main(int argc, char* argv[]) // We can pass in a command line option!!
 
 				cout << serverStatus.payload << endl;
 				// Receiving the dungeon layout, not quite working
-				/*
+				
 				ZeroMemory((char*)&serverStatus, 128);
-				// receive the dungeon size for the buffer
+				// receive how many lines will be received
 				bytesIn = recvfrom(serverSocket, (char*)&serverStatus, 128, 0, (sockaddr*)&serverHint, &serverLength);
 				if (bytesIn == SOCKET_ERROR)
 				{
@@ -256,17 +261,20 @@ void main(int argc, char* argv[]) // We can pass in a command line option!!
 				}
 
 				// Receive the dungeon layout
-				string bufferSize(serverStatus.payload);
-				int size = stoi(bufferSize);
-				ZeroMemory((char*)&serverStatus, size);
-				bytesIn = recvfrom(serverSocket, (char*)&serverStatus, size, 0, (sockaddr*)&serverHint, &serverLength);
-				if (bytesIn == SOCKET_ERROR)
-				{
-					cout << "Error receiving from client " << WSAGetLastError() << endl;
-				}
+				string receive(serverStatus.payload);
+				int repeat = stoi(receive);
 
-				cout << serverStatus.payload << endl;
-				*/
+				// Print out each line received from the server
+				for (int i = 0; i < repeat; i++)
+				{
+					ZeroMemory((char*)&serverStatus, 128);
+					bytesIn = recvfrom(serverSocket, (char*)&serverStatus, 128, 0, (sockaddr*)&serverHint, &serverLength);
+					if (bytesIn == SOCKET_ERROR)
+					{
+						cout << "Error receiving from client " << WSAGetLastError() << endl;
+					}
+					cout << serverStatus.payload << endl;
+				}
 				break;
 			}
 

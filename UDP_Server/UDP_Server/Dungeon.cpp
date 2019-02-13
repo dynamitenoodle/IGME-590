@@ -55,7 +55,7 @@ void Dungeon::AddPlayer(char clientIp[256], string name)
 				newTreasureCheck = false;
 		}
 
-		if (newTreasureCheck)
+		if (newTreasureCheck && randX != 0 && randY != 0)
 			break;
 	}
 
@@ -118,7 +118,7 @@ string Dungeon::DisplayValues(string name)
 	{
 		if (playerArray[i].GetName() == name)
 		{
-			values += to_string(playerArray[i].positionX) + "-";
+			values += to_string(playerArray[i].positionX + 1) + "-";
 			values += to_string(playerArray[i].positionY) + ".";
 		}
 	}
@@ -210,7 +210,7 @@ void Dungeon::RemoveTreasure(int x, int y)
 	int toRemove = -1;
 	for (int i = 0; i < treasureAmt; i++)
 	{
-		if (treasures->ColCheck(x, y))
+		if (treasures[i].ColCheck(x, y))
 		{
 			toRemove = i;
 		}
