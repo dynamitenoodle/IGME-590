@@ -234,7 +234,7 @@ void main()
 					if (playerCheck)
 						dungeonLayout += " [P] ";
 					
-					else if (treasureCheck)
+					else if (treasureCheck && !playerCheck)
 						dungeonLayout += " [T] ";
 
 					else
