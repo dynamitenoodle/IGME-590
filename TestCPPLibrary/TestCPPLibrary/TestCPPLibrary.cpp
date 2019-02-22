@@ -1,9 +1,8 @@
 // TestCPPLibrary.cpp : Defines the exported functions for the DLL application.
 //
-
-#include "stdafx.h"
-#include <iostream> 
+#pragma once
 #include "TestCPPLibrary.h"
+#include "stdafx.h"
 
 using namespace std;
 extern "C" {
@@ -22,11 +21,11 @@ extern "C" {
 		return a / b;
 	}
 
-	char TestString()
+	string TestString()
 	{
-		char* str = new char[100];
+		string returnStr = "Hello World";
 
-		str = (char*)"Hello World";
-		return str;
+		return returnStr;
 	}
+
 }
